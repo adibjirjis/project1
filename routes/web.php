@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Models\Transaction;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -15,7 +16,7 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return redirect('/login');
+    return view('home');
 });
 
 Route::get('/register', function () {
@@ -33,3 +34,8 @@ Route::get('/logout', [AuthController::class, 'logout'])->name('logout');
 Route::get('/home', function () {
     return view('home');
 })->middleware('auth');
+
+Route::get('/home', function() {
+    $transactions = Transaction::with('category')->latest()->get();
+    return view('home', compact('transactions'));
+});
