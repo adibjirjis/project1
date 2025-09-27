@@ -25,26 +25,27 @@ class AuthController extends Controller
         ]);
 
         Auth::login($user);
-        return redirect('/home');
+        return redirect()->route('home');
     }
 
     
-    public function login(Request $request)
-    {
-        $credentials = $request->validate([
-            'email'    => 'required|email',
-            'password' => 'required',
-        ]);
+public function login(Request $request)
+{
+    $credentials = $request->validate([
+        'email'    => 'required|email',
+        'password' => 'required',
+    ]);
 
-        if (Auth::attempt($credentials)) {
-            $request->session()->regenerate();
-            return redirect('/home');
-        }
-
-        return back()->withErrors([
-            'email' => 'Email atau password salah',
-        ]);
+    if (Auth::attempt($credentials)) {
+        $request->session()->regenerate();
+        return redirect()->route('home');
     }
+
+    return back()->withErrors([
+        'email' => 'Email atau password salah',
+    ]);
+}
+
 
     public function logout(Request $request)
     {

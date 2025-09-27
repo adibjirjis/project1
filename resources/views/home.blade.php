@@ -9,18 +9,37 @@
 </head>
 <body>
     <!-- Navbar -->
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-        <div class="container-fluid">
-            <a class="navbar-brand fw-bold" href="#">MyDashboard</a>
-            <div class="collapse navbar-collapse">
-                <ul class="navbar-nav ms-auto">
-                    <li class="nav-item"><a class="nav-link active" href="#">Home</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#">Profil</a></li>
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container-fluid">
+        <a class="navbar-brand fw-bold" href="#">MyDashboard</a>
+        <div class="collapse navbar-collapse">
+            <ul class="navbar-nav ms-auto">
+              
+
+                @guest
+                    <!-- Kalau belum login -->
                     <li class="nav-item"><a class="nav-link" href="{{ url('/login')}}">Login</a></li>
-                </ul>
-            </div>
+                @endguest
+
+                @auth
+                    <!-- Kalau sudah login -->
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ route('categories.index') }}">Kelola Kategori</a>
+                    </li>
+                    <li class="nav-item">
+                        <form action="{{ route('logout') }}" method="GET" class="d-inline">
+                            @csrf
+                            <button type="submit" class="btn btn-link nav-link" style="border:none;cursor:pointer;">
+                                Logout
+                            </button>
+                        </form>
+                    </li>
+                @endauth
+            </ul>
         </div>
-    </nav>
+    </div>
+</nav>
+
 
     <!-- Konten Utama -->
     <div class="container mt-4">
@@ -59,6 +78,13 @@
     <div class="card-header bg-dark text-white">
         <h5 class="mb-0">Data Transaksi Terbaru</h5>
     </div>
+    <div class="d-flex justify-content-end mb-3">
+    @auth
+        <a href="{{ route('categories.index') }}" class="btn btn-primary">
+            Kelola Kategori
+        </a>
+    @endauth
+</div>
     <div class="card-body">
         <table class="table table-hover table-bordered">
             <thead class="table-secondary">

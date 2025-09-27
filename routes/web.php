@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\CategoryController;
 use App\Models\Transaction;
 use Illuminate\Support\Facades\Route;
 
@@ -16,26 +17,20 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return view('home');
-});
+    $transactions = \App\Models\Transaction::with('category')->latest()->get();
+    return view('home', compact('transactions'));
+})->name('home');
 
-Route::get('/register', function () {
-    return view('auth.register');
-})->name('register.page');
 
-Route::get('/login', function () {
-    return view('auth.login');
-})->name('login.page');
-
+Route::get('/register', fn() => view('auth.register'))->name('register.page');
+Route::get('/login', fn() => view('auth.login'))->name('login.page');
 Route::post('/register', [AuthController::class, 'register'])->name('register');
 Route::post('/login', [AuthController::class, 'login'])->name('login');
 Route::get('/logout', [AuthController::class, 'logout'])->name('logout');
 
 Route::get('/home', function () {
-    return view('home');
-})->middleware('auth');
-
-Route::get('/home', function() {
     $transactions = Transaction::with('category')->latest()->get();
     return view('home', compact('transactions'));
-});
+})->middleware('auth')->name('home');
+
+Route::resource('categories', CategoryController::class);
